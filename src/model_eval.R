@@ -197,6 +197,10 @@ train_data$HeartDisease <- as.factor(train_data$HeartDisease)
 val_data$HeartDisease <- as.factor(val_data$HeartDisease)
 test_data$HeartDisease <- as.factor(test_data$HeartDisease)
 
+
+
+
+
 # Models
 models <- list(
   Logistic_Regression = logistic_model,
@@ -227,4 +231,7 @@ list(
   CART = cart_df,
   KNN = knn_df
 )
+
+df <- cbind(logistic_df,rf_df,cart_df,knn_df)
+View(df)
 
