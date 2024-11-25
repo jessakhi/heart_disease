@@ -1,5 +1,4 @@
-library(data.table)
-library(caret)
+
 
 heart_data <- fread("data/processed/heart_cleaned.csv")
 

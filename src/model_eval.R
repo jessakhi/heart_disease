@@ -1,17 +1,10 @@
-# Load required libraries
-library(data.table)
-library(caret)
-library(pROC)
-library(ggplot2)
 
-# Load models
 models_dir <- "models"
 logistic_model <- readRDS(file.path(models_dir, "logistic_model.rds"))
 rf_model <- readRDS(file.path(models_dir, "rf_model.rds"))
 cart_model <- readRDS(file.path(models_dir, "cart_model.rds"))
 knn_model <- readRDS(file.path(models_dir, "knn_model.rds"))
 
-# Load data
 train_data <- fread("data/prepared/heart_train.csv")
 val_data <- fread("data/prepared/heart_validation.csv")
 test_data <- fread("data/prepared/heart_test.csv")
@@ -19,7 +12,6 @@ train_data$HeartDisease <- as.factor(train_data$HeartDisease)
 val_data$HeartDisease <- as.factor(val_data$HeartDisease)
 test_data$HeartDisease <- as.factor(test_data$HeartDisease)
 
-# Define evaluation function
 evaluate_model <- function(model, data) {
   predicted_probs <- predict(model, data, type = "prob")
   predicted_labels <- predict(model, data, type = "raw")
@@ -80,13 +72,11 @@ benchmark_table <- data.table(
   R_Squared = unlist(lapply(results, function(res) sapply(res, function(ds) ds$r_squared)))
 )
 
-# Save benchmark table to CSV
 fwrite(benchmark_table, file = "report/benchmark_table.csv")
 
-# Print benchmark table
 print(benchmark_table)
 
-# Generate and save plots for each metric
+View(benchmark_table)
 metrics <- c("Accuracy", "Precision", "Recall", "F1_Score", "AUC", "MAE", "RMSE", "R_Squared")
 
 dir.create("report/img/eval", recursive = TRUE, showWarnings = FALSE)
@@ -104,7 +94,6 @@ for (metric in metrics) {
          plot = metric_plot, width = 8, height = 6)
 }
 
-# Generate predictions for true vs. predicted labels and save to CSV
 get_predictions <- function(model, data, dataset_name, model_name) {
   predicted_labels <- predict(model, data, type = "raw")
   true_labels <- data$HeartDisease
@@ -126,7 +115,7 @@ predictions <- rbindlist(lapply(names(models), function(model_name) {
 
 fwrite(predictions, "report/predictions.csv")
 
-# Save confusion matrices as plots
+
 dir.create("report/img/confusion_matrices", recursive = TRUE, showWarnings = FALSE)
 
 lapply(names(models), function(model_name) {
@@ -135,7 +124,7 @@ lapply(names(models), function(model_name) {
     cm_plot <- as.table(cm$table)
     cm_title <- paste0(model_name, " - ", dataset, " Confusion Matrix")
     
-    # Save confusion matrix
+    
     png(file.path("report/img/confusion_matrices", paste0(model_name, "_", dataset, "_cm.png")))
     fourfoldplot(cm_plot, color = c("#CC6666", "#99CC99"), main = cm_title)
     dev.off()
@@ -162,7 +151,6 @@ lapply(names(models), function(model_name) {
 
 
 
-# Define evaluation and metrics extraction functions
 evaluate_model <- function(model, data) {
   predicted_probs <- predict(model, data, type = "prob")
   predicted_labels <- predict(model, data, type = "raw")
@@ -218,13 +206,11 @@ results <- lapply(models, function(model) {
   )
 })
 
-# Create data frames for each model
 logistic_df <- results$Logistic_Regression$Validation$Predictions
 rf_df <- results$Random_Forest$Validation$Predictions
 cart_df <- results$CART$Validation$Predictions
 knn_df <- results$KNN$Validation$Predictions
 
-# Display as data frames
 list(
   Logistic_Regression = logistic_df,
   Random_Forest = rf_df,

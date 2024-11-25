@@ -1,4 +1,4 @@
-library(data.table)
+
 
 # Load the preprocessed dataset
 heart_data <- fread("data/processed/heart_cleaned.csv")

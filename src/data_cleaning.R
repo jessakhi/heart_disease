@@ -1,8 +1,4 @@
-library(data.table)
-library(dplyr)
 
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # Set to src/
-setwd("..") 
 
 heart_data <- fread("data/raw/heart.csv")
 
