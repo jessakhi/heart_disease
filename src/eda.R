@@ -109,7 +109,7 @@ p <- ggplot(tsne_data, aes(x = X1, y = X2, color = HeartDisease)) +
   labs(title = "t-SNE Visualization", x = "t-SNE Dimension 1", y = "t-SNE Dimension 2") +
   theme_minimal()
 ggsave(filename = file.path(image_dir, "tsne_visualization.png"), plot = p)
-
+print(p)
 heart_data[, `:=`(MaleFemaleHeart = paste(Sex, HeartDisease, sep = " - "))]
 gender_heart_data <- heart_data[, .N, by = MaleFemaleHeart]
 gender_heart_data[, Percentage := round(N / sum(N) * 100, 2)]
